@@ -30,7 +30,10 @@ class _MySplashScreenState extends State<MySplashScreen> {
       child: Container(
         color: Colors.white,
         child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Image.asset("images/splash.jpg"),
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Image.asset("images/splash.jpg"),
+          ),
           const SizedBox(height: 10,),
           const Padding(
             padding: EdgeInsets.all(8.0),
