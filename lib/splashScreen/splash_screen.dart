@@ -19,6 +19,12 @@ class _MySplashScreenState extends State<MySplashScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Material(
       child: Container(
