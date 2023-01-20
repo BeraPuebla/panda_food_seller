@@ -105,8 +105,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 )
               ],
             ),
-          )
-      ]),
+          ),
+          const SizedBox(height: 30,),
+          ElevatedButton(
+            child: const Text(
+              "Sign Up",
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.purple,
+              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20)
+            ),
+            onPressed: () => print("clicked"),
+          ),
+          const SizedBox(height: 30,),
+      ],
+      ),
     );
   }
 }
