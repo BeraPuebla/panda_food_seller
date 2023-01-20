@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/widgets/custom_text_field.dart';
 
@@ -23,6 +25,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   XFile? imageXFile;
   final ImagePicker _picker = ImagePicker();
 
+  Position? position;
+  List<Placemark>? placemarks;
+
   Future<void> _getImage() async{
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
 
@@ -31,6 +36,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
+  getCurrentLocation() async {
+    Position newPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    position = newPosition;
+    placemarks = await placemarkFromCoordinates(
+      position!.latitude,
+      position!.longitude,
+    );
+    Placemark pMark = placemarks![0];
+    String completeAddress = '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea} ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
+    locationController.text = completeAddress;
+  }
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -104,7 +120,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       "Get my Current Location",
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () => print("clicked"),
+                    onPressed: () {
+                      getCurrentLocation();
+                    },
                     icon: const Icon(Icons.location_on, color: Colors.white,),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.amber,
