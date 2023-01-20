@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seller_app/widgets/custom_text_field.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -8,8 +9,17 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  TextEditingController anyController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: CustomTextField(
+        controller: anyController,
+        data: Icons.phone,
+        hintText: "Phone",
+        isObsecre: true,
+        enabled: true,
+      ),
+    );
   }
 }
