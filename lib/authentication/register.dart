@@ -5,6 +5,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/widgets/custom_text_field.dart';
+import 'package:seller_app/widgets/error_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -47,6 +48,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String completeAddress = '${pMark.subThoroughfare} ${pMark.thoroughfare}, ${pMark.subLocality} ${pMark.locality}, ${pMark.subAdministrativeArea} ${pMark.administrativeArea} ${pMark.postalCode}, ${pMark.country}';
     locationController.text = completeAddress;
   }
+
+  Future<void> formValidation() async {
+    if(imageXFile == null){
+      showDialog(
+        context: context,
+        builder: (c){
+          return ErrorDialog(
+            message: "Please select an image.",
+          );
+        }
+      );
+    }
+    else{
+      if(passwordController.text == confirmPasswordController.text){
+        // start uploading image
+        if(confirmPasswordController.text.isNotEmpty && emailController.text.isNotEmpty && nameController.text.isNotEmpty && phoneController.text.isNotEmpty && locationController.text.isNotEmpty){
+          // start uploading image
+        }
+        else{
+        showDialog(
+        context: context,
+        builder: (c){
+          return ErrorDialog(
+            message: "Please write the complete required info for Registration.",
+          );
+        }
+      );  
+        }
+      }
+      else{
+        showDialog(
+        context: context,
+        builder: (c){
+          return ErrorDialog(
+            message: "Password do not match.",
+          );
+        }
+      );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -145,7 +188,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               primary: Colors.purple,
               padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20)
             ),
-            onPressed: () => print("clicked"),
+            onPressed: (){
+              formValidation();
+            },
           ),
           const SizedBox(height: 30,),
       ],

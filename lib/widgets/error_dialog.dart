@@ -11,7 +11,10 @@ class ErrorDialog extends StatelessWidget {
       key: key,
       content: Text(message!),
       actions: [
-        ElevatedButton(onPressed: (){Navigator.pop(context);}, child: Center(child: Text("OK"),),style: ElevatedButton.styleFrom(primary: Colors.red,),),
+        ElevatedButton(
+          onPressed: (){Navigator.pop(context);}, 
+          child: Center(child: Text("OK"),),
+          style: ElevatedButton.styleFrom(primary: Colors.red,),),
       ],
     );
   }
