@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/widgets/custom_text_field.dart';
 import 'package:seller_app/widgets/error_dialog.dart';
+import 'package:seller_app/widgets/loading_dialog.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -28,6 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Position? position;
   List<Placemark>? placemarks;
+
+  String sellerImageUrl = "";
 
   Future<void> _getImage() async{
     imageXFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -54,7 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       showDialog(
         context: context,
         builder: (c){
-          return ErrorDialog(
+          return const ErrorDialog(
             message: "Please select an image.",
           );
         }
@@ -62,15 +66,30 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
     else{
       if(passwordController.text == confirmPasswordController.text){
-        // start uploading image
         if(confirmPasswordController.text.isNotEmpty && emailController.text.isNotEmpty && nameController.text.isNotEmpty && phoneController.text.isNotEmpty && locationController.text.isNotEmpty){
           // start uploading image
+          showDialog(
+            context: context,
+            builder: (c){
+              return const LoadingDialog(
+                message: "Registering Account",
+              );
+            }
+          );
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          fStorage.Reference reference = fStorage.FirebaseStorage.instance.ref().child("sellers").child(fileName);
+          fStorage.UploadTask uploadTask = reference.putFile(File(imageXFile!.path));
+          fStorage.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+          await taskSnapshot.ref.getDownloadURL().then((url) {
+            sellerImageUrl = url;
+            // save info to firestore
+          });
         }
         else{
         showDialog(
         context: context,
         builder: (c){
-          return ErrorDialog(
+          return const ErrorDialog(
             message: "Please write the complete required info for Registration.",
           );
         }
@@ -81,7 +100,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         showDialog(
         context: context,
         builder: (c){
-          return ErrorDialog(
+          return const ErrorDialog(
             message: "Password do not match.",
           );
         }
