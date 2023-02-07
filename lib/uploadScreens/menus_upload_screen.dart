@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/mainScreens/home_screen.dart';
 
 class MenusUploadScreen extends StatefulWidget {
@@ -9,6 +10,9 @@ class MenusUploadScreen extends StatefulWidget {
 }
 
 class _MenusUploadScreenState extends State<MenusUploadScreen> {
+  XFile? imageXFile;
+  final ImagePicker _picker = ImagePicker();
+
   defaultScreen() {
     return Scaffold(
       appBar: AppBar(
@@ -56,12 +60,67 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
                     "Add New Menu",
                     style: TextStyle(color: Colors.white, fontSize: 18),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    takeImage(context);
+                  },
                 ),
               ],
             ),
           )),
     );
+  }
+
+  takeImage(mContext) {
+    return showDialog(
+        context: mContext,
+        builder: (context) {
+          return SimpleDialog(
+            title: const Text(
+              "Menu Image",
+              style: TextStyle(color: Colors.amber),
+            ),
+            children: [
+              SimpleDialogOption(
+                onPressed: captureImageWithCamera,
+                child: const Text(
+                  "Capture with Camera",
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: pickImageFromGallery,
+                child: const Text(
+                  "Select from gallery",
+                ),
+              ),
+              SimpleDialogOption(
+                onPressed: () => Navigator.pop(context),
+                child: const Text(
+                  "Cancel",
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  captureImageWithCamera() async {
+    Navigator.pop(context);
+    imageXFile = await _picker.pickImage(
+        source: ImageSource.camera, maxHeight: 720, maxWidth: 1280);
+
+    setState(() {
+      imageXFile;
+    });
+  }
+
+  pickImageFromGallery() async {
+    Navigator.pop(context);
+    imageXFile = await _picker.pickImage(
+        source: ImageSource.gallery, maxHeight: 720, maxWidth: 1280);
+
+    setState(() {
+      imageXFile;
+    });
   }
 
   @override
