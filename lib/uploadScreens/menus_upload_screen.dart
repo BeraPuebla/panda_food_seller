@@ -183,6 +183,10 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             ),
           ),
         ),
+        const Divider(
+          color: Colors.amber,
+          thickness: 1,
+        ),
         ListTile(
           leading: const Icon(
             Icons.perm_device_information,
@@ -192,9 +196,32 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             width: 250,
             child: TextField(
               controller: shortInfoController,
-              decoration: const InputDecoration(hintText: "Menu info"),
+              decoration: const InputDecoration(
+                  hintText: "Menu info", border: InputBorder.none),
             ),
           ),
+        ),
+        const Divider(
+          color: Colors.amber,
+          thickness: 1,
+        ),
+        ListTile(
+          leading: const Icon(
+            Icons.title,
+            color: Colors.cyan,
+          ),
+          title: SizedBox(
+            width: 250,
+            child: TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                  hintText: "menu title", border: InputBorder.none),
+            ),
+          ),
+        ),
+        const Divider(
+          color: Colors.amber,
+          thickness: 1,
         ),
       ]),
     );
