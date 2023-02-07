@@ -31,20 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         automaticallyImplyLeading: true,
       ),
-      body: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.cyan,
-          ),
-          onPressed: () {
-            firebaseAuth.signOut().then((value) {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (c) => const AuthScreen()));
-            });
-          },
-          child: const Text("Logout"),
-        ),
-      ),
+      body: const Center(),
     );
   }
 }
