@@ -42,8 +42,7 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+            clearMenusUploadForm();
           },
         ),
       ),
@@ -152,8 +151,8 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             color: Colors.white,
           ),
           onPressed: () {
-            //Navigator.push(
-            //   context, MaterialPageRoute(builder: (c) => const HomeScreen()));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (c) => const HomeScreen()));
           },
         ),
         actions: [
@@ -225,6 +224,14 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
         ),
       ]),
     );
+  }
+
+  clearMenusUploadForm() {
+    setState(() {
+      shortInfoController.clear();
+      titleController.clear();
+      imageXFile = null;
+    });
   }
 
   @override
