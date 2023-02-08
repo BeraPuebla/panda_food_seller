@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:seller_app/global/global.dart';
 import 'package:seller_app/mainScreens/home_screen.dart';
 import 'package:seller_app/widgets/progress_bar.dart';
 
@@ -251,9 +253,9 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
         });
 
         //upload image
-        String getDownloadURL = await uploadImage(File(imageXFile!.path));
-        //save info to firebase
-
+        String downloadUrl = await uploadImage(File(imageXFile!.path));
+        //save info to firestore
+        saveInfo(downloadUrl);
       } else {
         showDialog(
             context: context,
@@ -272,6 +274,29 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             );
           });
     }
+  }
+
+  saveInfo(String downloadUrl) {
+    final ref = FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("Menus");
+
+    ref.doc(uniqueIdName).set({
+      "menuID": uniqueIdName,
+      "sellerUID": sharedPreferences!.getString("uid"),
+      "menuInfo": shortInfoController.text.toString(),
+      "menuTitle": titleController.text.toString(),
+      "publishedDate": DateTime.now(),
+      "status": "available",
+      "thumbnailUrl": downloadUrl,
+    });
+
+    clearMenusUploadForm();
+    setState(() {
+      uniqueIdName = "";
+      uploading = false;
+    });
   }
 
   uploadImage(mImageFile) async {
