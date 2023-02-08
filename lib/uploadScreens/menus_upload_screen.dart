@@ -6,6 +6,7 @@ import 'package:seller_app/mainScreens/home_screen.dart';
 import 'package:seller_app/widgets/progress_bar.dart';
 
 import '../widgets/error_dialog.dart';
+import 'package:firebase_storage/firebase_storage.dart' as storageRef;
 
 class MenusUploadScreen extends StatefulWidget {
   const MenusUploadScreen({super.key});
@@ -22,6 +23,7 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
   TextEditingController titleController = TextEditingController();
 
   bool uploading = false;
+  String uniqueIdName = DateTime.now().millisecondsSinceEpoch.toString();
 
   defaultScreen() {
     return Scaffold(
@@ -240,13 +242,18 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
     });
   }
 
-  validateUploadForm() {
+  validateUploadForm() async {
     if (imageXFile != null) {
       if (shortInfoController.text.isNotEmpty &&
           titleController.text.isNotEmpty) {
         setState(() {
           uploading = true;
         });
+
+        //upload image
+        String getDownloadURL = await uploadImage(File(imageXFile!.path));
+        //save info to firebase
+
       } else {
         showDialog(
             context: context,
@@ -265,6 +272,17 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
             );
           });
     }
+  }
+
+  uploadImage(mImageFile) async {
+    storageRef.Reference reference =
+        storageRef.FirebaseStorage.instance.ref().child("menus");
+
+    storageRef.UploadTask uploadTask =
+        reference.child("$uniqueIdName.jpg").putFile(mImageFile);
+    storageRef.TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+    String downloadURL = await taskSnapshot.ref.getDownloadURL();
+    return downloadURL;
   }
 
   @override
