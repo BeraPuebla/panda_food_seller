@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/mainScreens/home_screen.dart';
+import 'package:seller_app/widgets/progress_bar.dart';
+
+import '../widgets/error_dialog.dart';
 
 class MenusUploadScreen extends StatefulWidget {
   const MenusUploadScreen({super.key});
@@ -17,6 +20,8 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
 
   TextEditingController shortInfoController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+
+  bool uploading = false;
 
   defaultScreen() {
     return Scaffold(
@@ -157,7 +162,7 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
         ),
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: uploading ? null : () => validateUploadForm(),
             child: const Text(
               "Add",
               style: TextStyle(fontSize: 20),
@@ -166,6 +171,7 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
         ],
       ),
       body: ListView(children: [
+        uploading == true ? linearProgress() : const Text(""),
         SizedBox(
           height: 230,
           width: MediaQuery.of(context).size.width * 0.8,
@@ -232,6 +238,33 @@ class _MenusUploadScreenState extends State<MenusUploadScreen> {
       titleController.clear();
       imageXFile = null;
     });
+  }
+
+  validateUploadForm() {
+    if (imageXFile != null) {
+      if (shortInfoController.text.isNotEmpty &&
+          titleController.text.isNotEmpty) {
+        setState(() {
+          uploading = true;
+        });
+      } else {
+        showDialog(
+            context: context,
+            builder: (c) {
+              return const ErrorDialog(
+                message: "Please write title and info for menu.",
+              );
+            });
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (c) {
+            return const ErrorDialog(
+              message: "Please pick an image for Menu",
+            );
+          });
+    }
   }
 
   @override
